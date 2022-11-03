@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.io.File
 
-class FileListFragment: Fragment(R.layout.fragment_file_list) {
+class FileListFragment : Fragment(R.layout.fragment_file_list) {
     private lateinit var rootDir: File
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -39,7 +39,11 @@ class FileListFragment: Fragment(R.layout.fragment_file_list) {
 
         val files = dir.listFiles().toList()
         val parent = dir.parentFile
-        val data = if (rootDir == dir) { files } else { listOf(parent) + files }
+        val data = if (rootDir == dir) {
+            files
+        } else {
+            listOf(parent) + files
+        }
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.filesRecycler)
         recyclerView.setHasFixedSize(true)
