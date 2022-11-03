@@ -19,11 +19,20 @@ class FileListAdapter(
 
     override fun onBindViewHolder(holder: FileListViewHolder, position: Int) {
         val file = data[position]
+
         holder.titleText.text = if (file == parent) {
             ".."
         } else {
             file.name
         }
+
+        holder.iconImage.setImageResource(
+            if (file.isDirectory) {
+                R.drawable.ic_outline_folder_24
+            } else {
+                R.drawable.ic_outline_insert_drive_file_24
+            }
+        )
 
         holder.itemView.setOnClickListener {
             onClick(data[position])
