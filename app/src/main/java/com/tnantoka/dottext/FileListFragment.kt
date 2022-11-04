@@ -1,8 +1,10 @@
 package com.tnantoka.dottext
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -53,6 +55,19 @@ class FileListFragment : Fragment(R.layout.fragment_file_list) {
         recyclerView.adapter = FileListAdapter(data, parent) { file ->
             if (file.isDirectory) {
                 updateContent(file)
+            } else {
+                if (activity?.findViewById<FrameLayout>(R.id.detailFrame) != null) {
+                    parentFragmentManager
+                        .beginTransaction()
+                        .replace(R.id.detailFrame, DetailFragment.newInstance(file))
+                        .commit()
+                } else {
+                    startActivity(
+                        Intent(activity, DetailActivity::class.java).apply {
+                            putExtra("file", file)
+                        }
+                    )
+                }
             }
         }
     }
