@@ -1,20 +1,24 @@
 package com.tnantoka.dottext
 
 import android.os.Bundle
+import android.os.PersistableBundle
+import android.util.Log
 import android.view.MenuItem
-import android.widget.EditText
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import java.io.File
 
-class DetailActivity : AppCompatActivity(R.layout.activity_detail) {
+class PreferencesActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        intent?.extras?.let {
-            val file = it.getSerializable("file") as File
-            supportActionBar?.setTitle(file.name)
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setTitle(R.string.settings)
         }
+
+        supportFragmentManager
+            .beginTransaction()
+            .replace(android.R.id.content, PreferencesFragment())
+            .commit()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

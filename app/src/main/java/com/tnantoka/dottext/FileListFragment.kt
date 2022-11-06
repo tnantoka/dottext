@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.io.File
@@ -39,7 +40,11 @@ class FileListFragment : Fragment(R.layout.fragment_file_list) {
                     updateContent(currentDir.parentFile)
                 } else {
                     when (menuItem.itemId) {
-                        0 -> {}
+                        0 -> {
+                            startActivity(
+                                Intent(activity, PreferencesActivity::class.java)
+                            )
+                        }
                         1 -> {
                             val dialog = CreateDialogFragment()
                             dialog.show(activity.supportFragmentManager, "create")

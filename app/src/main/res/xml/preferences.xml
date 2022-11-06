@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListPreference
+        android:defaultValue="14"
+        android:entries="@array/font_sizes"
+        android:entryValues="@array/font_sizes"
+        android:key="font_size"
+        android:title="@string/font_size"
+        app:useSimpleSummaryProvider="true" />
+</PreferenceScreen>
