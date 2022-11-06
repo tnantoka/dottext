@@ -110,6 +110,7 @@ class FileListFragment : Fragment(R.layout.fragment_file_list) {
                         .beginTransaction()
                         .replace(R.id.detailFrame, DetailFragment.newInstance(file))
                         .commit()
+                    (activity as AppCompatActivity).supportActionBar?.setTitle(file.name)
                 } else {
                     startActivity(
                         Intent(activity, DetailActivity::class.java).apply {
@@ -120,6 +121,16 @@ class FileListFragment : Fragment(R.layout.fragment_file_list) {
             }
         }
 
-        (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(dir != rootDir)
+        (activity as AppCompatActivity).supportActionBar?.apply {
+            val isRoot = dir == rootDir
+            setDisplayHomeAsUpEnabled(!isRoot)
+            setTitle(
+                if (isRoot) {
+                    getString(R.string.app_name)
+                } else {
+                    dir.name
+                }
+            )
+        }
     }
 }
