@@ -65,9 +65,19 @@ class FileListFragment : Fragment(R.layout.fragment_file_list) {
             updateContent(currentDir)
         }
 
+        setFragmentResultListener(RenameDialogFragment.RESULT_RENAME) { requestKey, bundle ->
+            val file = bundle.getSerializable(RenameDialogFragment.FILE) as File
+            file.renameTo(File(currentDir, bundle.getString(RenameDialogFragment.NAME)))
+            updateContent(currentDir)
+        }
+
         setFragmentResultListener(MenuDialogFragment.RESULT_RENAME) { requestKey, bundle ->
+            val activity = activity ?: return@setFragmentResultListener
             val file = bundle.getSerializable(MenuDialogFragment.FILE) as File
-            Log.d("hoge", "rename")
+            RenameDialogFragment().apply {
+                arguments = bundleOf("file" to file)
+                show(activity.supportFragmentManager, "rename")
+            }
         }
         setFragmentResultListener(MenuDialogFragment.RESULT_MOVE) { requestKey, bundle ->
             val file = bundle.getSerializable(MenuDialogFragment.FILE) as File
