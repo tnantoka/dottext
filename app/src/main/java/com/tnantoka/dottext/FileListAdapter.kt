@@ -9,7 +9,8 @@ import java.io.File
 class FileListAdapter(
     private val data: List<File>,
     private val parent: File,
-    private val onClick: (File) -> Unit
+    private val onClick: (File) -> Unit,
+    private val onLongClick: (File) -> Unit,
 ) : RecyclerView.Adapter<FileListViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FileListViewHolder {
         return FileListViewHolder(
@@ -36,6 +37,11 @@ class FileListAdapter(
 
         holder.itemView.setOnClickListener {
             onClick(data[position])
+        }
+
+        holder.itemView.setOnLongClickListener {
+            onLongClick(data[position])
+            return@setOnLongClickListener true
         }
     }
 

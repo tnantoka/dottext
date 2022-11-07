@@ -2,9 +2,13 @@
     <string name="app_name">DotText</string>
     <string name="content">Content</string>
     <string name="create">Create</string>
+    <string name="delete">Delete</string>
     <string name="directory">Directory</string>
+    <string name="duplicate">Duplicate</string>
     <string name="file">File</string>
     <string name="font_size">Font size</string>
+    <string name="move">Move</string>
     <string name="name">Name</string>
+    <string name="rename">Rename</string>
     <string name="settings">Settings</string>
 </resources>

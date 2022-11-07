@@ -9,6 +9,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
@@ -63,6 +64,25 @@ class FileListFragment : Fragment(R.layout.fragment_file_list) {
             File(currentDir, bundle.getString(CreateDialogFragment.NAME)).mkdir()
             updateContent(currentDir)
         }
+
+        setFragmentResultListener(MenuDialogFragment.RESULT_RENAME) { requestKey, bundle ->
+            val file = bundle.getSerializable(MenuDialogFragment.FILE) as File
+            Log.d("hoge", "rename")
+        }
+        setFragmentResultListener(MenuDialogFragment.RESULT_MOVE) { requestKey, bundle ->
+            val file = bundle.getSerializable(MenuDialogFragment.FILE) as File
+            Log.d("hoge", "move")
+        }
+        setFragmentResultListener(MenuDialogFragment.RESULT_DUPLICATE) { requestKey, bundle ->
+            val file = bundle.getSerializable(MenuDialogFragment.FILE) as File
+            file.copyRecursively(duplicatedFile(file))
+            updateContent(currentDir)
+        }
+        setFragmentResultListener(MenuDialogFragment.RESULT_DELETE) { requestKey, bundle ->
+            val file = bundle.getSerializable(MenuDialogFragment.FILE) as File
+            file.delete()
+            updateContent(currentDir)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -106,25 +126,36 @@ class FileListFragment : Fragment(R.layout.fragment_file_list) {
         recyclerView.layoutManager = LinearLayoutManager(view.context).apply {
             orientation = LinearLayoutManager.VERTICAL
         }
-        recyclerView.adapter = FileListAdapter(data, parent) { file ->
-            if (file.isDirectory) {
-                updateContent(file)
-            } else {
-                if (activity?.findViewById<FrameLayout>(R.id.detailFrame) != null) {
-                    parentFragmentManager
-                        .beginTransaction()
-                        .replace(R.id.detailFrame, DetailFragment.newInstance(file))
-                        .commit()
-                    (activity as AppCompatActivity).supportActionBar?.setTitle(file.name)
+        recyclerView.adapter = FileListAdapter(
+            data,
+            parent,
+            { file ->
+                if (file.isDirectory) {
+                    updateContent(file)
                 } else {
-                    startActivity(
-                        Intent(activity, DetailActivity::class.java).apply {
-                            putExtra("file", file)
-                        }
-                    )
+                    if (activity?.findViewById<FrameLayout>(R.id.detailFrame) != null) {
+                        parentFragmentManager
+                            .beginTransaction()
+                            .replace(R.id.detailFrame, DetailFragment.newInstance(file))
+                            .commit()
+                        (activity as AppCompatActivity).supportActionBar?.setTitle(file.name)
+                    } else {
+                        startActivity(
+                            Intent(activity, DetailActivity::class.java).apply {
+                                putExtra("file", file)
+                            }
+                        )
+                    }
+                }
+            },
+            { file ->
+                val activity = activity ?: return@FileListAdapter
+                MenuDialogFragment().apply {
+                    arguments = bundleOf("file" to file)
+                    show(activity.supportFragmentManager, "menu")
                 }
             }
-        }
+        )
 
         (activity as AppCompatActivity).supportActionBar?.apply {
             val isRoot = dir == rootDir
@@ -136,6 +167,18 @@ class FileListFragment : Fragment(R.layout.fragment_file_list) {
                     dir.name
                 }
             )
+        }
+    }
+
+    private fun duplicatedFile(file: File): File {
+        var i = 2
+        while (true) {
+            val name = "${file.nameWithoutExtension}_$i.${file.extension}"
+            val dest = File(currentDir, name)
+            if (!dest.exists()) {
+                return dest
+            }
+            i++
         }
     }
 }
