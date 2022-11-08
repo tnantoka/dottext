@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.EditText
+import android.widget.ImageButton
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
@@ -27,10 +29,17 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
         super.onViewCreated(view, savedInstanceState)
 
         val contentEdit = view.findViewById<EditText>(R.id.contentEdit)
+        val countText = view.findViewById<TextView>(R.id.countText)
+        val shareButton = view.findViewById<ImageButton>(R.id.shareButton)
 
         contentEdit.requestFocus()
         contentEdit.addTextChangedListener {
             file?.writeText(it.toString())
+            countText.setText(getString(R.string.chars, it?.count() ?: 0))
+        }
+
+        shareButton.setOnClickListener {
+            Log.d("hoge", "share")
         }
 
         (arguments ?: activity?.intent?.extras)?.let {
