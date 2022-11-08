@@ -17,15 +17,13 @@ import java.io.File
 
 class RenameDialogFragment : DialogFragment() {
     companion object {
-        const val RESULT_RENAME = "RESULT_FILE"
-        const val NAME = "NAME"
-        const val FILE = "FILE"
+        const val RESULT_RENAME = "RENAME_RESULT_RENAME"
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val view = LayoutInflater.from(activity).inflate(R.layout.fragment_rename_dialog, null)
         val nameEdit = view.findViewById<EditText>(R.id.nameEdit)
-        val file = arguments?.getSerializable("file") as File
+        val file = arguments?.getSerializable(Constants.FILE) as File
 
         val dialog = AlertDialog.Builder(activity).apply {
             setTitle(R.string.rename)
@@ -33,7 +31,7 @@ class RenameDialogFragment : DialogFragment() {
             setPositiveButton(android.R.string.ok) { dialog, which ->
                 setFragmentResult(
                     RESULT_RENAME,
-                    bundleOf(NAME to nameEdit.text.toString(), FILE to file)
+                    bundleOf(Constants.NAME to nameEdit.text.toString(), Constants.FILE to file)
                 )
             }
             setNegativeButton(android.R.string.cancel) { dialog, which ->

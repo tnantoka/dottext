@@ -8,6 +8,7 @@
     <string name="file">File</string>
     <string name="font_size">Font size</string>
     <string name="move">Move</string>
+    <string name="move_file">Move \"%1$s\"</string>
     <string name="name">Name</string>
     <string name="rename">Rename</string>
     <string name="settings">Settings</string>

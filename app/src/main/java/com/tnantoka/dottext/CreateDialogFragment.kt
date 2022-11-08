@@ -15,9 +15,8 @@ import androidx.fragment.app.setFragmentResult
 
 class CreateDialogFragment : DialogFragment() {
     companion object {
-        const val RESULT_FILE = "RESULT_FILE"
-        const val RESULT_DIRECTORY = "RESULT_DIRECTORY"
-        const val NAME = "NAME"
+        const val RESULT_FILE = "CREATE_RESULT_FILE"
+        const val RESULT_DIRECTORY = "CREATE_RESULT_DIRECTORY"
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -35,7 +34,7 @@ class CreateDialogFragment : DialogFragment() {
                     } else {
                         RESULT_DIRECTORY
                     },
-                    bundleOf(NAME to nameEdit.text.toString())
+                    bundleOf(Constants.NAME to nameEdit.text.toString())
                 )
             }
             setNegativeButton(android.R.string.cancel) { dialog, which ->

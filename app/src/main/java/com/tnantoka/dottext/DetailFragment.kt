@@ -17,7 +17,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
         fun newInstance(file: File): DetailFragment {
             val fragment = DetailFragment()
             fragment.arguments = Bundle().apply {
-                putSerializable("file", file)
+                putSerializable(Constants.FILE, file)
             }
             return fragment
         }
@@ -34,7 +34,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
         }
 
         (arguments ?: activity?.intent?.extras)?.let {
-            file = it.getSerializable("file") as File
+            file = it.getSerializable(Constants.FILE) as File
             contentEdit.setText(file?.readText())
         }
 

@@ -57,39 +57,50 @@ class FileListFragment : Fragment(R.layout.fragment_file_list) {
         })
 
         setFragmentResultListener(CreateDialogFragment.RESULT_FILE) { requestKey, bundle ->
-            File(currentDir, bundle.getString(CreateDialogFragment.NAME)).writeText("")
+            File(currentDir, bundle.getString(Constants.NAME)).writeText("")
             updateContent(currentDir)
         }
         setFragmentResultListener(CreateDialogFragment.RESULT_DIRECTORY) { requestKey, bundle ->
-            File(currentDir, bundle.getString(CreateDialogFragment.NAME)).mkdir()
+            File(currentDir, bundle.getString(Constants.NAME)).mkdir()
             updateContent(currentDir)
         }
 
         setFragmentResultListener(RenameDialogFragment.RESULT_RENAME) { requestKey, bundle ->
-            val file = bundle.getSerializable(RenameDialogFragment.FILE) as File
-            file.renameTo(File(currentDir, bundle.getString(RenameDialogFragment.NAME)))
+            val file = bundle.getSerializable(Constants.FILE) as File
+            file.renameTo(File(currentDir, bundle.getString(Constants.NAME)))
             updateContent(currentDir)
+        }
+
+        setFragmentResultListener(MoveDialogFragment.RESULT_MOVE) { requestKey, bundle ->
+            val file = bundle.getSerializable(Constants.FILE) as File
+            val directory = bundle.getSerializable(Constants.DIRECTORY) as File
+            file.renameTo(File(directory, file.name))
+            updateContent(directory)
         }
 
         setFragmentResultListener(MenuDialogFragment.RESULT_RENAME) { requestKey, bundle ->
             val activity = activity ?: return@setFragmentResultListener
-            val file = bundle.getSerializable(MenuDialogFragment.FILE) as File
+            val file = bundle.getSerializable(Constants.FILE) as File
             RenameDialogFragment().apply {
-                arguments = bundleOf("file" to file)
+                arguments = bundleOf(Constants.FILE to file)
                 show(activity.supportFragmentManager, "rename")
             }
         }
         setFragmentResultListener(MenuDialogFragment.RESULT_MOVE) { requestKey, bundle ->
-            val file = bundle.getSerializable(MenuDialogFragment.FILE) as File
-            Log.d("hoge", "move")
+            val activity = activity ?: return@setFragmentResultListener
+            val file = bundle.getSerializable(Constants.FILE) as File
+            MoveDialogFragment().apply {
+                arguments = bundleOf(Constants.FILE to file, Constants.ROOT_DIRECTORY to rootDir)
+                show(activity.supportFragmentManager, "move")
+            }
         }
         setFragmentResultListener(MenuDialogFragment.RESULT_DUPLICATE) { requestKey, bundle ->
-            val file = bundle.getSerializable(MenuDialogFragment.FILE) as File
+            val file = bundle.getSerializable(Constants.FILE) as File
             file.copyRecursively(duplicatedFile(file))
             updateContent(currentDir)
         }
         setFragmentResultListener(MenuDialogFragment.RESULT_DELETE) { requestKey, bundle ->
-            val file = bundle.getSerializable(MenuDialogFragment.FILE) as File
+            val file = bundle.getSerializable(Constants.FILE) as File
             file.delete()
             updateContent(currentDir)
         }
@@ -152,7 +163,7 @@ class FileListFragment : Fragment(R.layout.fragment_file_list) {
                     } else {
                         startActivity(
                             Intent(activity, DetailActivity::class.java).apply {
-                                putExtra("file", file)
+                                putExtra(Constants.FILE, file)
                             }
                         )
                     }
@@ -161,7 +172,7 @@ class FileListFragment : Fragment(R.layout.fragment_file_list) {
             { file ->
                 val activity = activity ?: return@FileListAdapter
                 MenuDialogFragment().apply {
-                    arguments = bundleOf("file" to file)
+                    arguments = bundleOf(Constants.FILE to file)
                     show(activity.supportFragmentManager, "menu")
                 }
             }

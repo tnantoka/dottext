@@ -12,7 +12,7 @@ class DetailActivity : AppCompatActivity(R.layout.activity_detail) {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         intent?.extras?.let {
-            val file = it.getSerializable("file") as File
+            val file = it.getSerializable(Constants.FILE) as File
             supportActionBar?.setTitle(file.name)
         }
     }
