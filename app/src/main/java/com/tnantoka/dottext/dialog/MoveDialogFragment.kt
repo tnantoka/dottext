@@ -1,22 +1,17 @@
-package com.tnantoka.dottext
+package com.tnantoka.dottext.dialog
 
 import android.app.AlertDialog
 import android.app.Dialog
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
-import android.widget.EditText
-import android.widget.FrameLayout
-import android.widget.RadioButton
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.setFragmentResult
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.tnantoka.dottext.Constants
+import com.tnantoka.dottext.FileListAdapter
+import com.tnantoka.dottext.R
 import java.io.File
 
 class MoveDialogFragment : DialogFragment() {

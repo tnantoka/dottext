@@ -1,18 +1,16 @@
-package com.tnantoka.dottext
+package com.tnantoka.dottext.dialog
 
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
-import android.text.Editable
-import android.util.Log
 import android.view.LayoutInflater
 import android.widget.EditText
-import android.widget.RadioButton
 import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.setFragmentResult
+import com.tnantoka.dottext.Constants
+import com.tnantoka.dottext.R
 import java.io.File
 
 class RenameDialogFragment : DialogFragment() {

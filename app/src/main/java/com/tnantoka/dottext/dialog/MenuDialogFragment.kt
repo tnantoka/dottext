@@ -1,12 +1,13 @@
-package com.tnantoka.dottext
+package com.tnantoka.dottext.dialog
 
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
-import android.util.Log
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
+import com.tnantoka.dottext.Constants
+import com.tnantoka.dottext.R
 import java.io.File
 
 class MenuDialogFragment : DialogFragment() {

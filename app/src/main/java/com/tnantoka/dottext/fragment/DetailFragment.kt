@@ -1,4 +1,4 @@
-package com.tnantoka.dottext
+package com.tnantoka.dottext.fragment
 
 import android.os.Bundle
 import android.util.Log
@@ -6,10 +6,11 @@ import android.view.View
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
+import com.tnantoka.dottext.Constants
+import com.tnantoka.dottext.R
 import java.io.File
 
 class DetailFragment : Fragment(R.layout.fragment_detail) {

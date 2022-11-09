@@ -7,7 +7,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/detailFragment"
-        android:name="com.tnantoka.dottext.DetailFragment"
+        android:name="com.tnantoka.dottext.fragment.DetailFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -1,8 +1,7 @@
-package com.tnantoka.dottext
+package com.tnantoka.dottext.fragment
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -13,9 +12,17 @@ import androidx.core.os.bundleOf
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
-import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.tnantoka.dottext.Constants
+import com.tnantoka.dottext.FileListAdapter
+import com.tnantoka.dottext.R
+import com.tnantoka.dottext.activity.DetailActivity
+import com.tnantoka.dottext.activity.PreferencesActivity
+import com.tnantoka.dottext.dialog.CreateDialogFragment
+import com.tnantoka.dottext.dialog.MenuDialogFragment
+import com.tnantoka.dottext.dialog.MoveDialogFragment
+import com.tnantoka.dottext.dialog.RenameDialogFragment
 import java.io.File
 
 class FileListFragment : Fragment(R.layout.fragment_file_list) {
