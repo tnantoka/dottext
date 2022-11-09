@@ -4,32 +4,32 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.webkit.URLUtil
 import android.widget.EditText
+import android.widget.RadioButton
 import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
 import com.tnantoka.dottext.Constants
 import com.tnantoka.dottext.R
-import java.io.File
 
-class RenameDialogFragment : DialogFragment() {
+class DownloadDialogFragment : DialogFragment() {
     companion object {
-        const val RESULT_RENAME = "RENAME_RESULT_RENAME"
+        const val RESULT_DOWNLOAD = "DOWNLOAD_RESULT_DOWNLOAD"
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val view = LayoutInflater.from(activity).inflate(R.layout.fragment_rename_dialog, null)
-        val nameEdit = view.findViewById<EditText>(R.id.urlEdit)
-        val file = arguments?.getSerializable(Constants.FILE) as File
+        val view = LayoutInflater.from(activity).inflate(R.layout.fragment_download_dialog, null)
+        val urlEdit = view.findViewById<EditText>(R.id.urlEdit)
 
         val dialog = AlertDialog.Builder(activity).apply {
-            setTitle(R.string.rename)
+            setTitle(R.string.create)
             setView(view)
             setPositiveButton(android.R.string.ok) { dialog, which ->
                 setFragmentResult(
-                    RESULT_RENAME,
-                    bundleOf(Constants.NAME to nameEdit.text.toString(), Constants.FILE to file)
+                    RESULT_DOWNLOAD,
+                    bundleOf(Constants.URL to urlEdit.text.toString())
                 )
             }
             setNegativeButton(android.R.string.cancel) { dialog, which ->
@@ -38,16 +38,12 @@ class RenameDialogFragment : DialogFragment() {
 
         dialog.setOnShowListener {
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
-            nameEdit.setText(file.name)
-            nameEdit.requestFocus()
+            urlEdit.requestFocus()
         }
 
-        nameEdit.addTextChangedListener {
+        urlEdit.addTextChangedListener {
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled =
-                !it.isNullOrBlank() && file.name != it.toString() && !File(
-                    file.parent,
-                    it.toString()
-                ).exists()
+                URLUtil.isValidUrl(it.toString())
         }
 
         return dialog

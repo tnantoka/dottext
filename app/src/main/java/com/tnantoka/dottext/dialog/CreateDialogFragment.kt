@@ -21,7 +21,7 @@ class CreateDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val view = LayoutInflater.from(activity).inflate(R.layout.fragment_create_dialog, null)
-        val nameEdit = view.findViewById<EditText>(R.id.nameEdit)
+        val nameEdit = view.findViewById<EditText>(R.id.urlEdit)
         val fileRadio = view.findViewById<RadioButton>(R.id.fileRadio)
 
         val dialog = AlertDialog.Builder(activity).apply {

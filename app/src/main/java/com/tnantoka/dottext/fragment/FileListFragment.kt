@@ -2,6 +2,7 @@ package com.tnantoka.dottext.fragment
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -12,6 +13,7 @@ import androidx.core.os.bundleOf
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tnantoka.dottext.Constants
@@ -19,11 +21,14 @@ import com.tnantoka.dottext.FileListAdapter
 import com.tnantoka.dottext.R
 import com.tnantoka.dottext.activity.DetailActivity
 import com.tnantoka.dottext.activity.PreferencesActivity
-import com.tnantoka.dottext.dialog.CreateDialogFragment
-import com.tnantoka.dottext.dialog.MenuDialogFragment
-import com.tnantoka.dottext.dialog.MoveDialogFragment
-import com.tnantoka.dottext.dialog.RenameDialogFragment
+import com.tnantoka.dottext.dialog.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
+import java.io.FileOutputStream
+import java.net.URL
 
 class FileListFragment : Fragment(R.layout.fragment_file_list) {
     private lateinit var rootDir: File
@@ -34,11 +39,14 @@ class FileListFragment : Fragment(R.layout.fragment_file_list) {
 
         activity?.addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menu.add(0, 0, 0, R.string.settings)
+                menu.add(0, 0, 2, R.string.settings)
                     .setIcon(R.drawable.ic_baseline_settings_24)
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
-                menu.add(0, 1, 0, R.string.settings)
+                menu.add(0, 1, 0, R.string.create)
                     .setIcon(R.drawable.ic_baseline_add_24)
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+                menu.add(0, 2, 1, R.string.download)
+                    .setIcon(R.drawable.ic_baseline_download_24)
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
             }
 
@@ -57,6 +65,10 @@ class FileListFragment : Fragment(R.layout.fragment_file_list) {
                             val dialog = CreateDialogFragment()
                             dialog.show(activity.supportFragmentManager, "create")
                         }
+                        2 -> {
+                            val dialog = DownloadDialogFragment()
+                            dialog.show(activity.supportFragmentManager, "download")
+                        }
                     }
                 }
                 return true
@@ -72,6 +84,10 @@ class FileListFragment : Fragment(R.layout.fragment_file_list) {
             updateContent(currentDir)
         }
 
+        setFragmentResultListener(DownloadDialogFragment.RESULT_DOWNLOAD) { requestKey, bundle ->
+            val url = bundle.getString(Constants.URL)
+            download(URL(url))
+        }
         setFragmentResultListener(RenameDialogFragment.RESULT_RENAME) { requestKey, bundle ->
             val file = bundle.getSerializable(Constants.FILE) as File
             file.renameTo(File(currentDir, bundle.getString(Constants.NAME)))
@@ -207,6 +223,15 @@ class FileListFragment : Fragment(R.layout.fragment_file_list) {
                 return dest
             }
             i++
+        }
+    }
+
+    private fun download(url: URL) {
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                url.openStream().copyTo(FileOutputStream(File(currentDir, File(url.file).name)))
+            }
+            updateContent(currentDir)
         }
     }
 }

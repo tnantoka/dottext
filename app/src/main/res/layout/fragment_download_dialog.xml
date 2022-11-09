@@ -13,12 +13,12 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="20dp"
         android:ems="10"
-        android:hint="@string/name"
+        android:hint="@string/url"
+        android:importantForAutofill="no"
         android:inputType="textPersonName"
         android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:importantForAutofill="no" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
