@@ -3,6 +3,7 @@
     <string name="content">Content</string>
     <string name="chars">Chars: %1$d</string>
     <string name="create">Create</string>
+    <string name="cant_edit">The item can\'t be edited</string>
     <string name="delete">Delete</string>
     <string name="directory">Directory</string>
     <string name="download">Download</string>

@@ -24,7 +24,7 @@ class DownloadDialogFragment : DialogFragment() {
         val urlEdit = view.findViewById<EditText>(R.id.urlEdit)
 
         val dialog = AlertDialog.Builder(activity).apply {
-            setTitle(R.string.create)
+            setTitle(R.string.download)
             setView(view)
             setPositiveButton(android.R.string.ok) { dialog, which ->
                 setFragmentResult(
