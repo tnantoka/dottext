@@ -1,5 +1,7 @@
 package com.tnantoka.dottext.fragment
 
+import android.content.ClipData
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -8,13 +10,12 @@ import android.webkit.WebViewClient
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.core.content.FileProvider
 import androidx.core.net.toUri
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
-import com.tnantoka.dottext.Constants
-import com.tnantoka.dottext.R
-import com.tnantoka.dottext.mimeType
+import com.tnantoka.dottext.*
 import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
 import org.intellij.markdown.html.HtmlGenerator
 import org.intellij.markdown.parser.MarkdownParser
@@ -49,7 +50,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                 file?.writeText(it.toString())
                 countText.setText(getString(R.string.chars, it?.count() ?: 0))
             }
-            if (file?.mimeType() == "text/markdown") {
+            if (file?.isMarkdown() ?: false) {
                 val flavour = GFMFlavourDescriptor()
                 val parsedTree = MarkdownParser(flavour).buildMarkdownTreeFromString(it.toString())
                 val html = HtmlGenerator(it.toString(), parsedTree, flavour).generateHtml()
@@ -65,7 +66,31 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
         previewWeb.settings.allowFileAccess = true
 
         shareButton.setOnClickListener {
-            Log.d("hoge", "share")
+            val file = file ?: return@setOnClickListener
+
+            startActivity(
+                Intent.createChooser(
+                    Intent().apply {
+                        action = Intent.ACTION_SEND
+                        type = file.mimeType()
+                        if (file.isText()) {
+                            putExtra(Intent.EXTRA_TEXT, file.readText())
+                        } else {
+                            val uri = FileProvider.getUriForFile(
+                                context,
+                                "com.tnantoka.dottext.fileprovider",
+                                file
+                            )
+                            putExtra(
+                                Intent.EXTRA_STREAM,
+                                uri
+                            )
+                            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                            clipData = ClipData.newRawUri(null, uri)
+                        }
+                    }, null
+                )
+            )
         }
 
         (arguments ?: activity?.intent?.extras)?.let {
@@ -87,6 +112,6 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
     }
 
     private fun isEdiable(): Boolean {
-        return file?.mimeType()?.startsWith("text/") ?: false
+        return file?.isText() ?: false
     }
 }
