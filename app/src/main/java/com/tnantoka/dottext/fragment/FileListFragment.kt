@@ -8,6 +8,8 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.FrameLayout
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.core.view.MenuProvider
@@ -22,7 +24,6 @@ import com.tnantoka.dottext.R
 import com.tnantoka.dottext.activity.DetailActivity
 import com.tnantoka.dottext.activity.PreferencesActivity
 import com.tnantoka.dottext.dialog.*
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -33,6 +34,7 @@ import java.net.URL
 class FileListFragment : Fragment(R.layout.fragment_file_list) {
     private lateinit var rootDir: File
     private lateinit var currentDir: File
+    private var onBackPressedCallback: OnBackPressedCallback? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,6 +76,10 @@ class FileListFragment : Fragment(R.layout.fragment_file_list) {
                 return true
             }
         })
+
+        onBackPressedCallback = activity?.onBackPressedDispatcher?.addCallback {
+            updateContent(currentDir.parentFile)
+        }
 
         setFragmentResultListener(CreateDialogFragment.RESULT_FILE) { requestKey, bundle ->
             File(currentDir, bundle.getString(Constants.NAME)).writeText("")
@@ -127,6 +133,11 @@ class FileListFragment : Fragment(R.layout.fragment_file_list) {
             file.delete()
             updateContent(currentDir)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        onBackPressedCallback?.remove()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -211,6 +222,7 @@ class FileListFragment : Fragment(R.layout.fragment_file_list) {
                     dir.name
                 }
             )
+            onBackPressedCallback?.isEnabled = !isRoot
         }
     }
 
