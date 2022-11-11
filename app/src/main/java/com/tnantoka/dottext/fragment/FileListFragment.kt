@@ -2,7 +2,6 @@ package com.tnantoka.dottext.fragment
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -55,7 +54,8 @@ class FileListFragment : Fragment(R.layout.fragment_file_list) {
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 val activity = activity ?: return true
                 if (menuItem.itemId == android.R.id.home) {
-                    updateContent(currentDir.parentFile)
+                    val parent = currentDir.parentFile ?: return true
+                    updateContent(parent)
                 } else {
                     when (menuItem.itemId) {
                         0 -> {
@@ -78,36 +78,40 @@ class FileListFragment : Fragment(R.layout.fragment_file_list) {
         })
 
         onBackPressedCallback = activity?.onBackPressedDispatcher?.addCallback {
-            updateContent(currentDir.parentFile)
+            val parent = currentDir.parentFile ?: return@addCallback
+            updateContent(parent)
         }
 
-        setFragmentResultListener(CreateDialogFragment.RESULT_FILE) { requestKey, bundle ->
-            File(currentDir, bundle.getString(Constants.NAME)).writeText("")
+        setFragmentResultListener(CreateDialogFragment.RESULT_FILE) { _, bundle ->
+            val name = bundle.getString(Constants.NAME) ?: return@setFragmentResultListener
+            File(currentDir, name).writeText("")
             updateContent(currentDir)
         }
-        setFragmentResultListener(CreateDialogFragment.RESULT_DIRECTORY) { requestKey, bundle ->
-            File(currentDir, bundle.getString(Constants.NAME)).mkdir()
+        setFragmentResultListener(CreateDialogFragment.RESULT_DIRECTORY) { _, bundle ->
+            val name = bundle.getString(Constants.NAME) ?: return@setFragmentResultListener
+            File(currentDir, name).mkdir()
             updateContent(currentDir)
         }
 
-        setFragmentResultListener(DownloadDialogFragment.RESULT_DOWNLOAD) { requestKey, bundle ->
+        setFragmentResultListener(DownloadDialogFragment.RESULT_DOWNLOAD) { _, bundle ->
             val url = bundle.getString(Constants.URL)
             download(URL(url))
         }
-        setFragmentResultListener(RenameDialogFragment.RESULT_RENAME) { requestKey, bundle ->
+        setFragmentResultListener(RenameDialogFragment.RESULT_RENAME) { _, bundle ->
             val file = bundle.getSerializable(Constants.FILE) as File
-            file.renameTo(File(currentDir, bundle.getString(Constants.NAME)))
+            val name = bundle.getString(Constants.NAME) ?: return@setFragmentResultListener
+            file.renameTo(File(currentDir, name))
             updateContent(currentDir)
         }
 
-        setFragmentResultListener(MoveDialogFragment.RESULT_MOVE) { requestKey, bundle ->
+        setFragmentResultListener(MoveDialogFragment.RESULT_MOVE) { _, bundle ->
             val file = bundle.getSerializable(Constants.FILE) as File
             val directory = bundle.getSerializable(Constants.DIRECTORY) as File
             file.renameTo(File(directory, file.name))
             updateContent(directory)
         }
 
-        setFragmentResultListener(MenuDialogFragment.RESULT_RENAME) { requestKey, bundle ->
+        setFragmentResultListener(MenuDialogFragment.RESULT_RENAME) { _, bundle ->
             val activity = activity ?: return@setFragmentResultListener
             val file = bundle.getSerializable(Constants.FILE) as File
             RenameDialogFragment().apply {
@@ -115,7 +119,7 @@ class FileListFragment : Fragment(R.layout.fragment_file_list) {
                 show(activity.supportFragmentManager, "rename")
             }
         }
-        setFragmentResultListener(MenuDialogFragment.RESULT_MOVE) { requestKey, bundle ->
+        setFragmentResultListener(MenuDialogFragment.RESULT_MOVE) { _, bundle ->
             val activity = activity ?: return@setFragmentResultListener
             val file = bundle.getSerializable(Constants.FILE) as File
             MoveDialogFragment().apply {
@@ -123,12 +127,12 @@ class FileListFragment : Fragment(R.layout.fragment_file_list) {
                 show(activity.supportFragmentManager, "move")
             }
         }
-        setFragmentResultListener(MenuDialogFragment.RESULT_DUPLICATE) { requestKey, bundle ->
+        setFragmentResultListener(MenuDialogFragment.RESULT_DUPLICATE) { _, bundle ->
             val file = bundle.getSerializable(Constants.FILE) as File
             file.copyRecursively(duplicatedFile(file))
             updateContent(currentDir)
         }
-        setFragmentResultListener(MenuDialogFragment.RESULT_DELETE) { requestKey, bundle ->
+        setFragmentResultListener(MenuDialogFragment.RESULT_DELETE) { _, bundle ->
             val file = bundle.getSerializable(Constants.FILE) as File
             file.delete()
             updateContent(currentDir)
@@ -168,8 +172,8 @@ class FileListFragment : Fragment(R.layout.fragment_file_list) {
 
         currentDir = dir
 
-        val files = dir.listFiles().toList()
-        val parent = dir.parentFile
+        val files = dir.listFiles()?.toList() ?: return
+        val parent = dir.parentFile ?: return
         val data = if (rootDir == dir) {
             files
         } else {
@@ -215,13 +219,11 @@ class FileListFragment : Fragment(R.layout.fragment_file_list) {
         (activity as AppCompatActivity).supportActionBar?.apply {
             val isRoot = dir == rootDir
             setDisplayHomeAsUpEnabled(!isRoot)
-            setTitle(
-                if (isRoot) {
-                    getString(R.string.app_name)
-                } else {
-                    dir.name
-                }
-            )
+            title = if (isRoot) {
+                getString(R.string.app_name)
+            } else {
+                dir.name
+            }
             onBackPressedCallback?.isEnabled = !isRoot
         }
     }
