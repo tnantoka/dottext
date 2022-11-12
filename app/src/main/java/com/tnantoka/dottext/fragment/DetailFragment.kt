@@ -15,6 +15,8 @@ import androidx.core.net.toUri
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.button.MaterialButtonToggleGroup
 import com.tnantoka.dottext.*
 import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
 import org.intellij.markdown.html.HtmlGenerator
@@ -22,7 +24,13 @@ import org.intellij.markdown.parser.MarkdownParser
 import java.io.File
 
 class DetailFragment : Fragment(R.layout.fragment_detail) {
+    enum class Mode {
+        EDIT, PREVIEW, SPLIT
+    }
+
     private var file: File? = null
+    private lateinit var contentEdit: EditText
+    private lateinit var previewWeb: WebView
 
     companion object {
         fun newInstance(file: File): DetailFragment {
@@ -39,8 +47,13 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
         val context = context ?: return
 
-        val contentEdit = view.findViewById<EditText>(R.id.contentEdit)
-        val previewWeb = view.findViewById<WebView>(R.id.previewWeb)
+        contentEdit = view.findViewById<EditText>(R.id.contentEdit)
+        previewWeb = view.findViewById<WebView>(R.id.previewWeb)
+
+        val modeGroup = view.findViewById<MaterialButtonToggleGroup>(R.id.modeGroup)
+        val editToggle = view.findViewById<MaterialButton>(R.id.editToggle)
+        val previewToggle = view.findViewById<MaterialButton>(R.id.previewToggle)
+        val splitToggle = view.findViewById<MaterialButton>(R.id.splitToggle)
         val countText = view.findViewById<TextView>(R.id.countText)
         val shareButton = view.findViewById<ImageButton>(R.id.shareButton)
 
@@ -64,6 +77,22 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
         previewWeb.setWebViewClient(WebViewClient())
         previewWeb.settings.javaScriptEnabled = true
         previewWeb.settings.allowFileAccess = true
+
+        editToggle.addOnCheckedChangeListener { _button, isChecked ->
+            if (isChecked) {
+                changeMode(Mode.EDIT)
+            }
+        }
+        previewToggle.addOnCheckedChangeListener { _button, isChecked ->
+            if (isChecked) {
+                changeMode(Mode.PREVIEW)
+            }
+        }
+        splitToggle.addOnCheckedChangeListener { _button, isChecked ->
+            if (isChecked) {
+                changeMode(Mode.SPLIT)
+            }
+        }
 
         shareButton.setOnClickListener {
             val file = file ?: return@setOnClickListener
@@ -102,6 +131,13 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                     getString(R.string.cant_edit)
                 }
             )
+            if (isEdiable()) {
+                modeGroup.check(R.id.editToggle)
+                changeMode(Mode.EDIT)
+            } else {
+                modeGroup.check(R.id.previewToggle)
+                changeMode(Mode.PREVIEW)
+            }
             contentEdit.isEnabled = isEdiable()
         }
 
@@ -113,5 +149,22 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
     private fun isEdiable(): Boolean {
         return file?.isText() ?: false
+    }
+
+    private fun changeMode(mode: Mode) {
+        when (mode) {
+            Mode.EDIT -> {
+                contentEdit.visibility = View.VISIBLE
+                previewWeb.visibility = View.GONE
+            }
+            Mode.PREVIEW -> {
+                contentEdit.visibility = View.GONE
+                previewWeb.visibility = View.VISIBLE
+            }
+            Mode.SPLIT -> {
+                contentEdit.visibility = View.VISIBLE
+                previewWeb.visibility = View.VISIBLE
+            }
+        }
     }
 }
