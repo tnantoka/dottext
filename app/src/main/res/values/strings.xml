@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">DotText</string>
+    <string name="app_name">.txt</string>
     <string name="content">Content</string>
     <string name="chars">Chars: %1$d</string>
     <string name="create">Create</string>

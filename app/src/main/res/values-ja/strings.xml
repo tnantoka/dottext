@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">.txt</string>
+    <string name="chars">文字数: %1$d</string>
+    <string name="content">本文</string>
+    <string name="create">作成</string>
+    <string name="cant_edit">このファイルは編集できません</string>
+    <string name="delete">削除</string>
+    <string name="directory">ディレクトリー</string>
+    <string name="download">ダウンロード</string>
+    <string name="duplicate">複製</string>
+    <string name="file">ファイル</string>
+    <string name="font_size">フォントサイズ</string>
+    <string name="move">移動</string>
+    <string name="move_file">\"%1$s\" を移動</string>
+    <string name="name">名前</string>
+    <string name="rename">名前変更</string>
+    <string name="settings">設定</string>
+    <string name="share">シェア</string>
+    <string name="url">URL</string>
+</resources>
