@@ -2,6 +2,7 @@ package com.tnantoka.dottext.fragment
 
 import android.content.ClipData
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -15,6 +16,9 @@ import androidx.core.net.toUri
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
+import androidx.webkit.WebSettingsCompat
+import androidx.webkit.WebSettingsCompat.DARK_STRATEGY_PREFER_WEB_THEME_OVER_USER_AGENT_DARKENING
+import androidx.webkit.WebViewFeature
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.button.MaterialButtonToggleGroup
 import com.tnantoka.dottext.*
@@ -77,6 +81,21 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
         previewWeb.setWebViewClient(WebViewClient())
         previewWeb.settings.javaScriptEnabled = true
         previewWeb.settings.allowFileAccess = true
+        val nightModeFlag = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        if (nightModeFlag == Configuration.UI_MODE_NIGHT_YES) {
+            if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
+                WebSettingsCompat.setForceDark(
+                    previewWeb.settings,
+                    WebSettingsCompat.FORCE_DARK_ON
+                )
+            }
+            if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK_STRATEGY)) {
+                WebSettingsCompat.setForceDarkStrategy(
+                    previewWeb.settings,
+                    DARK_STRATEGY_PREFER_WEB_THEME_OVER_USER_AGENT_DARKENING
+                )
+            }
+        }
 
         editToggle.addOnCheckedChangeListener { _button, isChecked ->
             if (isChecked) {
