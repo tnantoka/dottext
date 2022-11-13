@@ -139,6 +139,11 @@ class FileListFragment : Fragment(R.layout.fragment_file_list) {
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putSerializable(Constants.DIRECTORY, currentDir)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         onBackPressedCallback?.remove()
@@ -151,7 +156,7 @@ class FileListFragment : Fragment(R.layout.fragment_file_list) {
         rootDir = context.getExternalFilesDir(null) ?: return
 
         createExamples()
-        updateContent(rootDir)
+        updateContent(savedInstanceState?.getSerializable(Constants.DIRECTORY) as? File ?: rootDir)
     }
 
     private fun createExamples() {
