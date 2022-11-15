@@ -12,7 +12,6 @@ import com.applovin.mediation.MaxAdViewAdListener
 import com.applovin.mediation.MaxError
 import com.applovin.mediation.ads.MaxAdView
 import com.applovin.sdk.AppLovinSdk
-import com.applovin.sdk.AppLovinSdkConfiguration
 import com.applovin.sdk.AppLovinSdkUtils
 import com.google.android.gms.ads.identifier.AdvertisingIdClient
 import com.tnantoka.dottext.R
@@ -31,18 +30,22 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), MaxAdViewAdListe
             lifecycleScope.launch {
                 withContext(Dispatchers.IO) {
                     val info = AdvertisingIdClient.getAdvertisingIdInfo(this@MainActivity)
-                    Log.d("hoge", "GAID: ${info.id}")
+                    Log.d("dev", "id: ${info.id}")
                 }
             }
         }
-
-        AppLovinSdk.getInstance(this).setMediationProvider("max")
-        AppLovinSdk.getInstance(this).initializeSdk({ configuration: AppLovinSdkConfiguration ->
-            createBannerAd()
-        })
     }
 
-    fun createBannerAd() {
+    override fun onStart() {
+        super.onStart()
+
+        AppLovinSdk.getInstance(this).mediationProvider = "max"
+        AppLovinSdk.getInstance(this).initializeSdk {
+            createBannerAd()
+        }
+    }
+
+    private fun createBannerAd() {
         if (findViewById<FrameLayout>(R.id.detailFrame) == null) {
             adView = MaxAdView(BuildConfig.MAX_BANNER_UNIT_ID, this)
             val width = ViewGroup.LayoutParams.MATCH_PARENT
