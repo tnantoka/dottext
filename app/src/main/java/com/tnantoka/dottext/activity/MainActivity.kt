@@ -46,6 +46,10 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), MaxAdViewAdListe
     }
 
     private fun createBannerAd() {
+        if (adView != null) {
+            return
+        }
+
         if (findViewById<FrameLayout>(R.id.detailFrame) == null) {
             adView = MaxAdView(BuildConfig.MAX_BANNER_UNIT_ID, this)
             val width = ViewGroup.LayoutParams.MATCH_PARENT
