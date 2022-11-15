@@ -13,6 +13,11 @@
         android:layout_weight="0.3"
         tools:layout="@layout/fragment_file_list" />
 
+    <View
+        android:layout_width="1dp"
+        android:layout_height="wrap_content"
+        android:background="@color/color_divider" />
+
     <FrameLayout
         android:id="@+id/detailFrame"
         android:layout_width="0dp"
