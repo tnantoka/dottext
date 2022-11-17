@@ -134,7 +134,7 @@ class FileListFragment : Fragment(R.layout.fragment_file_list) {
         }
         setFragmentResultListener(MenuDialogFragment.RESULT_DELETE) { _, bundle ->
             val file = bundle.getSerializable(Constants.FILE) as File
-            file.delete()
+            file.deleteRecursively()
             updateContent(currentDir)
         }
     }
