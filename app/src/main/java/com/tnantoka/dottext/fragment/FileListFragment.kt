@@ -17,6 +17,7 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.tnantoka.dottext.BuildConfig
 import com.tnantoka.dottext.Constants
 import com.tnantoka.dottext.FileListAdapter
 import com.tnantoka.dottext.R
@@ -160,12 +161,17 @@ class FileListFragment : Fragment(R.layout.fragment_file_list) {
     }
 
     private fun createExamples() {
-        val exampleText = File(rootDir, "example.txt")
+//        if (BuildConfig.DEBUG) {
+//            File(rootDir, "example.txt").delete()
+//            File(rootDir, "example.d").deleteRecursively()
+//        }
+
+        val exampleText = File(rootDir, "example.md")
         if (!exampleText.exists()) {
-            exampleText.writeText("example")
+            exampleText.writeText("# Markdown\n\nhello world")
         }
 
-        val exampleDir = File(rootDir, "example.d")
+        val exampleDir = File(rootDir, "directory")
         if (!exampleDir.exists()) {
             exampleDir.mkdir()
             File(exampleDir, "child.txt").writeText("child")

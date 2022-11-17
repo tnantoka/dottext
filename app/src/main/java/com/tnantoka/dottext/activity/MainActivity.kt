@@ -46,6 +46,10 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), MaxAdViewAdListe
     }
 
     private fun createBannerAd() {
+//        if (BuildConfig.DEBUG) {
+//            return
+//        }
+
         if (adView != null) {
             return
         }
