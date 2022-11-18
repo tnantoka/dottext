@@ -36,11 +36,11 @@ class FileListAdapter(
         )
 
         holder.itemView.setOnClickListener {
-            onClick(data[position])
+            onClick(file)
         }
 
         holder.itemView.setOnLongClickListener {
-            onLongClick(data[position])
+            onLongClick(file)
             return@setOnLongClickListener true
         }
     }
