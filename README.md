@@ -3,7 +3,7 @@
 Fully open source text editor for Android written in Kotlin. 
 https://dottext.tnantoka.com/
 
-![](https://dottext.tnantoka.com/screenshot.png)
+![](https://dottext.tnantoka.com/assets/screenshot.png)
 
 ## Development
 
