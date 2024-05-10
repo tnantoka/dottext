@@ -38,10 +38,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/filepaths" />
         </provider>
-
-        <meta-data
-            android:name="applovin.sdk.key"
-            android:value="0pRQb4xtidmdL6wJ5ATediG1b3iQ6RJra5M5WlOkvFe7zuV7HVJsz21H6SOb57UIE85vKfiTCEMvxKM3rHzNMs" />
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />
