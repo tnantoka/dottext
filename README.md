@@ -5,12 +5,6 @@ https://dottext.tnantoka.com/
 
 ![](https://dottext.tnantoka.com/assets/screenshot.png)
 
-## Development
-
-```
-$ cp gradle.properties.example app/gradle.properties
-```
-
 ## Mojicon
 
 The app icon is created by [Mojicon](https://mojicon.net/).
