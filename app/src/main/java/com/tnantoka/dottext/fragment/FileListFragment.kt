@@ -64,10 +64,12 @@ class FileListFragment : Fragment(R.layout.fragment_file_list) {
                                 Intent(activity, PreferencesActivity::class.java)
                             )
                         }
+
                         1 -> {
                             val dialog = CreateDialogFragment()
                             dialog.show(activity.supportFragmentManager, "create")
                         }
+
                         2 -> {
                             val dialog = DownloadDialogFragment()
                             dialog.show(activity.supportFragmentManager, "download")
@@ -158,6 +160,31 @@ class FileListFragment : Fragment(R.layout.fragment_file_list) {
 
         createExamples()
         updateContent(savedInstanceState?.getSerializable(Constants.DIRECTORY) as? File ?: rootDir)
+
+        if (android.os.Build.VERSION.SDK_INT > 34) {
+            val recyclerView = view.findViewById<RecyclerView>(R.id.filesRecycler)
+            val typedValue = android.util.TypedValue()
+            val actionBarHeight = if (requireActivity().theme.resolveAttribute(
+                    android.R.attr.actionBarSize,
+                    typedValue,
+                    true
+                )
+            ) {
+                android.util.TypedValue.complexToDimensionPixelSize(
+                    typedValue.data,
+                    resources.displayMetrics
+                )
+            } else {
+                (56 * resources.displayMetrics.density).toInt()
+            }
+
+            recyclerView.setPadding(
+                recyclerView.paddingLeft,
+                recyclerView.paddingTop + actionBarHeight,
+                recyclerView.paddingRight,
+                recyclerView.paddingBottom
+            )
+        }
     }
 
     private fun createExamples() {
