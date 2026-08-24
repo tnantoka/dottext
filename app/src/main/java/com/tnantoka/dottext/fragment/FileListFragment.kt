@@ -21,6 +21,7 @@ import com.tnantoka.dottext.BuildConfig
 import com.tnantoka.dottext.Constants
 import com.tnantoka.dottext.FileListAdapter
 import com.tnantoka.dottext.R
+import com.tnantoka.dottext.applySystemBarsPadding
 import com.tnantoka.dottext.activity.DetailActivity
 import com.tnantoka.dottext.activity.PreferencesActivity
 import com.tnantoka.dottext.dialog.*
@@ -161,30 +162,7 @@ class FileListFragment : Fragment(R.layout.fragment_file_list) {
         createExamples()
         updateContent(savedInstanceState?.getSerializable(Constants.DIRECTORY) as? File ?: rootDir)
 
-        if (android.os.Build.VERSION.SDK_INT > 34) {
-            val recyclerView = view.findViewById<RecyclerView>(R.id.filesRecycler)
-            val typedValue = android.util.TypedValue()
-            val actionBarHeight = if (requireActivity().theme.resolveAttribute(
-                    android.R.attr.actionBarSize,
-                    typedValue,
-                    true
-                )
-            ) {
-                android.util.TypedValue.complexToDimensionPixelSize(
-                    typedValue.data,
-                    resources.displayMetrics
-                )
-            } else {
-                (56 * resources.displayMetrics.density).toInt()
-            }
-
-            recyclerView.setPadding(
-                recyclerView.paddingLeft,
-                recyclerView.paddingTop + actionBarHeight,
-                recyclerView.paddingRight,
-                recyclerView.paddingBottom
-            )
-        }
+        view.findViewById<RecyclerView>(R.id.filesRecycler).applySystemBarsPadding()
     }
 
     private fun createExamples() {
