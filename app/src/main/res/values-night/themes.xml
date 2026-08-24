@@ -9,8 +9,9 @@
         <item name="colorSecondary">@color/green_200</item>
         <item name="colorSecondaryVariant">@color/green_200</item>
         <item name="colorOnSecondary">@color/black</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <!-- windowBackground is dark here, so the system bar icons stay light. -->
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
         <!-- Customize your theme here. -->
     </style>
 </resources>

@@ -5,14 +5,14 @@ plugins {
 
 android {
     namespace 'com.tnantoka.dottext'
-    compileSdk 35
+    compileSdk 36
 
     defaultConfig {
         applicationId "com.tnantoka.dottext"
         minSdk 28
-        targetSdk 35
-        versionCode 8
-        versionName "1.0.3"
+        targetSdk 36
+        versionCode 9
+        versionName "1.0.4"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -36,6 +36,10 @@ dependencies {
 
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.5.1'
+    // OnBackPressedDispatcher only registers an OnBackInvokedCallback from 1.6.0 on.
+    // Older versions rely on Activity.onBackPressed(), which the framework stops
+    // calling once the app targets SDK 36 and predictive back is on by default.
+    implementation 'androidx.activity:activity-ktx:1.6.1'
     implementation "androidx.fragment:fragment-ktx:1.5.3"
     implementation 'com.google.android.material:material:1.7.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'

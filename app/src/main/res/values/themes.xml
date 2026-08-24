@@ -9,8 +9,11 @@
         <item name="colorSecondary">@color/green_200</item>
         <item name="colorSecondaryVariant">@color/green_700</item>
         <item name="colorOnSecondary">@color/black</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <!-- statusBarColor and navigationBarColor are ignored under edge to edge
+             (targetSdk 35+), so windowBackground shows through behind the system bars.
+             It is light here, hence the dark icons. -->
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
         <!-- Customize your theme here. -->
     </style>
 </resources>

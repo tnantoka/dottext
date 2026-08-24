@@ -51,6 +51,12 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
         val context = context ?: return
 
+        view.findViewById<View>(R.id.contentLinear).applySystemBarsPadding()
+        // BottomAppBar handles the bottom inset itself, but only when it is part of the
+        // activity layout. Added through a transaction it never sees the insets, so take
+        // it over here instead.
+        view.findViewById<View>(R.id.bottomAppBar).applySystemBarsPadding(applyTop = false)
+
         contentEdit = view.findViewById<EditText>(R.id.contentEdit)
         previewWeb = view.findViewById<WebView>(R.id.previewWeb)
 
